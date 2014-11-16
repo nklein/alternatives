@@ -34,7 +34,7 @@ alternative clause.
 In the following example, the macro expands into the body of the final
 alternative clause:
 
-    (defun sum-i^2 (n)
+    (defun sum-of-squares (n)
       (alternatives
         (i-wanted-to-do-this
          (loop :for i :to n :summing (* i i)))
@@ -53,7 +53,7 @@ alternative clause:
 If we wanted to quickly try out the `MY-FIRST-ATTEMPT-...` clause, we
 could precede it with a `***`:
 
-    (defun sum-i^2 (n)
+    (defun sum-of-squares (n)
       (alternatives
         (i-wanted-to-do-this
          (loop :for i :to n :summing (* i i)))
