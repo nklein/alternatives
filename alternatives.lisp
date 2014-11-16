@@ -38,6 +38,38 @@
                     :test #'string=)
         body))))
 
+
+(defun %find-selected-clause (clauses)
+  (anaphora:acond
+    ((member-if #'%is-***-p clauses)
+     (first (rest anaphora:it)))
+
+    ((find-if #'%final-clause-p clauses)
+     anaphora:it)
+
+    ((last clauses)
+     (first anaphora:it))))
+
+(defmacro %destructure-clause ((tagv docstringv bodyv) clause &body body)
+  (let ((all (gensym "ALL-"))
+        (tag (gensym "TAG-"))
+        (rest (gensym "REST-"))
+        (doc (gensym "DOC-"))
+        (bod (gensym "BOD-")))
+    `(let* ((,all ,clause)
+            (,tag (first ,all))
+            (,rest (rest ,all))
+            (,doc (and (< 1 (length ,rest))
+                       (stringp (first ,rest))
+                       (first ,rest)))
+            (,bod (if ,doc
+                     (rest ,rest)
+                     ,rest)))
+       (let ((,tagv ,tag)
+             (,docstringv ,doc)
+             (,bodyv ,bod))
+         ,@body))))
+
 (defmacro alternatives (&body clauses)
   "This macro chooses one of the alternative CLAUSES.  Each
 alternative clause is of the form (TAG &BODY BODY) where the TAG is
@@ -51,16 +83,7 @@ macro expands to the body of the last alternative clause."
 
   (assert (every #'%valid-p clauses))
 
-  (anaphora:acond
-    ((member-if #'%is-***-p clauses)
-     (let ((clause (first (rest anaphora:it))))
-       `(progn
-          ,@(rest clause))))
-
-    ((find-if #'%final-clause-p clauses)
-     `(progn
-        ,@(rest anaphora:it)))
-
-    ((last clauses)
-     `(progn
-        ,@(rest (first anaphora:it))))))
+  (%destructure-clause (tag docstring body) (%find-selected-clause clauses)
+    (declare (ignore tag docstring))
+    `(progn
+       ,@body)))

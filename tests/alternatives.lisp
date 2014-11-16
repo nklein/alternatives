@@ -3,6 +3,9 @@
 (in-package #:alternatives-tests)
 
 (nst:def-test-group selected-alternatives ()
+  (nst:def-test no-clauses (:equal nil)
+    (alt:alternatives))
+
   (nst:def-test only-***-clause (:equal :b)
     (alt:alternatives
       (:a :a)
@@ -53,6 +56,20 @@
       ("A" :a)
       ("BLESSED" :b)
       (blessed :c))))
+
+(nst:def-test-group eliminates-docstrings ()
+  (nst:def-test eliminates-docstring-before-body
+      (:values (:each (:not (:predicate stringp)))
+               :true)
+    (macroexpand-1 '(alt:alternatives
+                     (:a
+                      "docstring here"
+                      :a))))
+
+  (nst:def-test keeps-docstring-if-only-body (:equal "docstring here")
+    (alt:alternatives
+      (:a
+       "docstring here"))))
 
 (nst:def-test-group malformed-alternatives ()
   (nst:def-test non-***-symbol (:err)

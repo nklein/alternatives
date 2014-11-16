@@ -3,7 +3,7 @@
 (asdf:defsystem #:alternatives
   :description "Macro for specifying alternatives when coding."
   :author "Patrick Stein <pat@nklein.com>"
-  :version "0.1.20141115"
+  :version "0.2.20141116"
   :license "Free"
   :depends-on (:anaphora)
   :components ((:static-file "README.md")
@@ -13,7 +13,7 @@
 (asdf:defsystem #:alternatives-tests
   :description "Tests for the alternatives library."
   :author "Patrick Stein <pat@nklein.com>"
-  :version "0.1.20141115"
+  :version "0.2.20141116"
   :license "Free"
   :depends-on (#:alternatives #:nst)
   :components ((:module "tests"
