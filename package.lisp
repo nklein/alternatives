@@ -3,4 +3,5 @@
 (defpackage #:alternatives
   (:nicknames :alt)
   (:use #:cl)
-  (:export #:alternatives))
+  (:export #:alternatives
+           #:alternatives*))

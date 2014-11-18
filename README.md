@@ -1,4 +1,4 @@
-## Alternatives (0.1.20141115)
+## Alternatives (0.2.20141117)
 
 When someone is writing code, there is often more than one way they
 could accomplish a given task.  After they have explored a number of
@@ -69,3 +69,30 @@ could precede it with a `***`:
 
         (now-i-know-better-and-can-do-this
          (/ (* n (1+ n) (1+ (+ n n)) 6)))))
+
+If one uses `ALTERNATIVES*` and provides a name for the alternatives,
+then one can check the `#'DOCUMENTATION` for the alternative at a
+later time to see which alternative was last macroexpanded.
+
+    (defun sum-of-squares (n)
+      (alternatives* sum-of-squares-implementations
+        (i-wanted-to-do-this
+         (loop :for i :to n :summing (* i i)))
+
+        ***
+        (my-first-attempt-was-something-like-this
+         "Using a DO-loop"
+         (do ((i 0 (1+ i))
+              (sum 0 (+ sum (* i i))))
+             ((> i n) sum)))
+
+        (but-i-could-not-do-that-because
+         "Some people find a do-loop too hard to read.")
+
+        (now-i-know-better-and-can-do-this
+         (/ (* n (1+ n) (1+ (+ n n)) 6)))))
+
+    (documentation 'sum-of-squares-implementations
+                   'alt:alternatives)
+       => "MY-FIRST-ATTEMPT-WAS-SOMETHING-LIKE-THIS
+          Using a DO-loop"
